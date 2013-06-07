@@ -41,8 +41,9 @@ module BitBucket
       normalize! params
       filter! VALID_KEY_PARAM_NAMES, params
       assert_required_keys(VALID_KEY_PARAM_NAMES, params)
-
-      post_request("/repositories/#{user}/#{repo.downcase}/deploy-keys/", params)
+      
+      sanitized_repo = repo.downcase.gsub(/[^a-z ]/, '').gsub(' ', '-')
+      post_request("/repositories/#{user}/#{sanitized_repo}/deploy-keys/", params)
     end
 
     # Edit a key
