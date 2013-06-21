@@ -29,5 +29,11 @@ describe BitBucket::Repos::Keys do
       keys.should_receive(:post_request).with "/repositories/user/#{repository_name}/deploy-keys/", anything
       keys.create "user", repository_name, label: '', key: ''
     end
+    
+    it "should preserve underscores in the repository name" do
+      repository_name = "my_repo"
+      keys.should_receive(:post_request).with "/repositories/user/#{repository_name}/deploy-keys/", anything
+      keys.create "user", repository_name, label: '', key: ''
+    end
   end
 end
