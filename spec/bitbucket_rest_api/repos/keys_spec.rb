@@ -23,5 +23,11 @@ describe BitBucket::Repos::Keys do
       keys.should_receive(:post_request).with "/repositories/user/#{repository_name}/deploy-keys/", anything
       keys.create "user", repository_name, label: '', key: ''
     end
+    
+    it "should preserve numbers in the repository name" do
+      repository_name = "myrepo33"
+      keys.should_receive(:post_request).with "/repositories/user/#{repository_name}/deploy-keys/", anything
+      keys.create "user", repository_name, label: '', key: ''
+    end
   end
 end

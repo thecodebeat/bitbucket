@@ -42,7 +42,7 @@ module BitBucket
       filter! VALID_KEY_PARAM_NAMES, params
       assert_required_keys(VALID_KEY_PARAM_NAMES, params)
       
-      sanitized_repo = repo.downcase.gsub(/[^a-z\-\. ]/, '').gsub(' ', '-')
+      sanitized_repo = repo.downcase.gsub(/[^a-z0-9\-\. ]/, '').gsub(' ', '-')
       post_request("/repositories/#{user}/#{sanitized_repo}/deploy-keys/", params)
     end
 
