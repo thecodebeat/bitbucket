@@ -7,6 +7,7 @@ require 'bitbucket_rest_api/utils/url'
 require 'bitbucket_rest_api/connection'
 require 'bitbucket_rest_api/deprecation'
 require 'bitbucket_rest_api/core_ext/ordered_hash'
+require 'bitbucket_rest_api/helpers/repository_helper'
 
 module BitBucket
   extend Configuration

@@ -20,6 +20,7 @@ module BitBucket
     include Validations
     include ParameterFilter
     include Normalizer
+    include Helpers::RepositoryHelper
 
     attr_reader *Configuration::VALID_OPTIONS_KEYS
 
