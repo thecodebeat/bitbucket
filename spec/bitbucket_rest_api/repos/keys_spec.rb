@@ -35,12 +35,5 @@ describe BitBucket::Repos::Keys do
       keys.should_receive(:post_request).with "/repositories/user/#{repository_name}/deploy-keys/", anything
       keys.create "user", repository_name, label: '', key: ''
     end
-
-    it "should make sure there's only one dash in the repository name" do
-      repository_name = "my - repo"
-      repository_url_name = "my-repo"
-      keys.should_receive(:post_request).with "/repositories/user/#{repository_url_name}/deploy-keys/", anything
-      keys.create "user", repository_name, label: '', key: ''
-    end
   end
 end
