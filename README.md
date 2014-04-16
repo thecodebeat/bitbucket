@@ -1,5 +1,7 @@
 # BitBucketAPI
 
+[![Gem Version](https://badge.fury.io/rb/bitbucket_rest_api.png)](http://badge.fury.io/rb/bitbucket_rest_api)
+
 [Wiki](https://github.com/vongrippen/bitbucket/wiki) | [RDocs](http://rubydoc.info/github/vongrippen/bitbucket/master/frames)
 
 [ ![Codeship Status for codeship/bitbucket](https://www.codeship.io/projects/88f3e870-c528-0130-f653-22e3e5b4ad67/status?branch=master)](https://www.codeship.io/projects/4690)
@@ -34,7 +36,7 @@ At this stage you can also supply various configuration parameters, such as `:us
 bitbucket = BitBucket.new oauth_token: 'request_token', oauth_secret: 'request_secret'
 ```
 
-Alternatively, you can configure the BitBucket settings by passing a block, for instance, with custom enteprise endpoint like
+Alternatively, you can configure the BitBucket settings by passing a block:
 
 ```ruby
 bitbucket = BitBucket.new do |config|
