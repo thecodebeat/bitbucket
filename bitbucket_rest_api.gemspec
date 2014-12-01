@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'multi_json',  '>= 1.7.5', '< 2.0'
   gem.add_dependency 'faraday_middleware', '~> 0.9.0'
   gem.add_dependency 'nokogiri', '>= 1.5.2'
-  gem.add_dependency 'simple_oauth'
+  gem.add_dependency 'simple_oauth', '~> 0.2.0'
 
   gem.add_development_dependency 'rspec', '>= 0'
   gem.add_development_dependency 'cucumber', '>= 0'
