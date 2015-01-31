@@ -60,7 +60,7 @@ or use convenience method:
 bitbucket = BitBucket.new basic_auth: 'login:password'
 ```
 
-You can interact with BitBucket interface, for example repositories, by issuing following calls that correspond directly to the BitBucket API hierarchy
+You can interact with BitBucket interface, for example repositories, by issuing the following calls that correspond directly to the BitBucket API hierarchy
 
 ```ruby
 bitbucket.repos.changesets.all  'user-name', 'repo-name'
