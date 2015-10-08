@@ -58,7 +58,7 @@ module BitBucket
       normalize! params
       assert_required_keys(REQUIRED_KEY_PARAM_NAMES, params)
 
-      post_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks", params)
+      post_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks", params, json: true)
     end
 
     # Edit a hook
@@ -81,7 +81,7 @@ module BitBucket
 
       normalize! params
 
-      put_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params)
+      put_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params, json: true)
     end
 
     # Delete hook
@@ -96,7 +96,7 @@ module BitBucket
       _validate_presence_of(hook_id)
       normalize! params
 
-      delete_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params)
+      delete_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params, json: true)
     end
 
   end # Repos::Keys
