@@ -29,13 +29,13 @@ module BitBucket
     #  @bitbucket = BitBucket.new
     #  @bitbucket.repos.hooks.get 'user-name', 'repo-name', 109172378)
     #
-    def get(user_name, repo_name, service_id, params={})
+    def get(user_name, repo_name, hook_id, params={})
       _update_user_repo_params(user_name, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
-      _validate_presence_of(service_id)
+      _validate_presence_of(hook_id)
       normalize! params
 
-      get_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{service_id}", params)
+      get_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params)
     end
     alias :find :get
 
