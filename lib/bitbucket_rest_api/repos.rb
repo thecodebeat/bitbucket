@@ -80,6 +80,8 @@ module BitBucket
       @download ||=ApiFactory.new "Repos::Download"
     end
 
+    def hooks
+      @hooks ||=ApiFactory.new "Repos::Hooks"
     end
 
     # Access to Repos::PullRequests API
