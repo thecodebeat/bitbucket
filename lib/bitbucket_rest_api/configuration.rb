@@ -7,6 +7,7 @@ module BitBucket
         :adapter,
         :client_id,
         :client_secret,
+        :new_access_token,
         :oauth_token,
         :oauth_secret,
         :endpoint,
@@ -29,6 +30,9 @@ module BitBucket
     # By default, don't set an application secret
     DEFAULT_CLIENT_SECRET      = nil
 
+    # By default, don't set an access token
+    DEFAULT_ACCESS_TOKEN       = nil
+
     # By default, don't set a user oauth access token
     DEFAULT_OAUTH_TOKEN        = nil
 
@@ -45,7 +49,7 @@ module BitBucket
     DEFAULT_BASIC_AUTH         = nil
 
     # The endpoint used to connect to BitBucket if none is set, in the event that BitBucket is ever available on location
-    DEFAULT_ENDPOINT           = 'https://bitbucket.org/api/1.0'.freeze
+    DEFAULT_ENDPOINT           = 'https://bitbucket.org/api'.freeze
 
     # The value sent in the http header for 'User-Agent' if none is set
     DEFAULT_USER_AGENT         = "BitBucket Ruby Gem #{BitBucket::VERSION::STRING}".freeze
@@ -83,6 +87,7 @@ module BitBucket
       self.adapter            = DEFAULT_ADAPTER
       self.client_id          = DEFAULT_CLIENT_ID
       self.client_secret      = DEFAULT_CLIENT_SECRET
+      self.new_access_token   = DEFAULT_ACCESS_TOKEN
       self.oauth_token        = DEFAULT_OAUTH_TOKEN
       self.oauth_secret       = DEFAULT_OAUTH_SECRET
       self.endpoint           = DEFAULT_ENDPOINT

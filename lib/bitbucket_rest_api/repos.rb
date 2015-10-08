@@ -10,7 +10,11 @@ module BitBucket
                  :Keys        => 'keys',
                  :Services    => 'services',
                  :Following   => 'following',
-                 :Sources     => 'sources'
+                 :Sources     => 'sources',
+                 :Forks       => 'forks',
+                 :Commits =>'commits',
+                 :Download=>'download',
+                 :PullRequest    => 'pull_request'
 
     DEFAULT_REPO_OPTIONS = {
         "website"         => "",
@@ -63,6 +67,20 @@ module BitBucket
     def services
       @services ||= ApiFactory.new 'Repos::Services'
     end
+    def forks
+      @services ||= ApiFactory.new 'Repos::Forks'
+    end
+    def commits
+      @services ||=ApiFactory.new 'Repos::Commits'
+    end
+    def download
+      @services ||=ApiFactory.new "Repos::Download"
+    end
+
+    # Access to Repos::PullRequests API
+    def pull_request
+      @pull_request ||= ApiFactory.new 'Repos::PullRequest'
+    end
 
     # List branches
     #
@@ -79,7 +97,7 @@ module BitBucket
       _validate_user_repo_params(user, repo) unless (user? && repo?)
       normalize! params
 
-      response = get_request("/repositories/#{user}/#{repo.downcase}/branches/", params)
+      response = get_request("/1.0/repositories/#{user}/#{repo.downcase}/branches/", params)
       return response unless block_given?
       response.each { |el| yield el }
     end
@@ -120,7 +138,7 @@ module BitBucket
       assert_required_keys(%w[ name ], params)
 
       # Requires authenticated user
-      post_request("/repositories/", DEFAULT_REPO_OPTIONS.merge(params))
+      post_request("/1.0/repositories/", DEFAULT_REPO_OPTIONS.merge(params))
     end
 
     # Edit a repository
@@ -150,7 +168,7 @@ module BitBucket
       normalize! params
       filter! VALID_REPO_OPTIONS, params
 
-      put_request("/repositories/#{user}/#{repo.downcase}/", DEFAULT_REPO_OPTIONS.merge(params))
+      put_request("/1.0/repositories/#{user}/#{repo.downcase}/", DEFAULT_REPO_OPTIONS.merge(params))
     end
 
     # Get a repository
@@ -164,7 +182,7 @@ module BitBucket
       _validate_user_repo_params(user, repo) unless user? && repo?
       normalize! params
 
-      get_request("/repositories/#{user}/#{repo.downcase}", params)
+      get_request("/1.0/repositories/#{user}/#{repo.downcase}", params)
     end
 
     alias :find :get
@@ -179,7 +197,7 @@ module BitBucket
       _update_user_repo_params(user_name, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
 
-      delete_request("/repositories/#{user}/#{repo.downcase}")
+      delete_request("/1.0/repositories/#{user}/#{repo.downcase}")
     end
 
     # List repositories for the authenticated user
@@ -202,10 +220,10 @@ module BitBucket
       filter! %w[ user type ], params
 
       response = #if (user_name = params.delete("user"))
-                 #  get_request("/users/#{user_name}", params)
+                 #  get_request("/1.0/users/#{user_name}", params)
                  #else
                    # For authenticated user
-                   get_request("/user/repositories", params)
+                   get_request("/1.0/user/repositories", params)
                  #end
       return response unless block_given?
       response.each { |el| yield el }
@@ -225,7 +243,7 @@ module BitBucket
       _validate_user_repo_params(user, repo) unless user? && repo?
       normalize! params
 
-      response = get_request("/repositories/#{user}/#{repo.downcase}/tags/", params)
+      response = get_request("/1.0/repositories/#{user}/#{repo.downcase}/tags/", params)
       return response unless block_given?
       response.each { |el| yield el }
     end
