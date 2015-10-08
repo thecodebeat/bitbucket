@@ -3,14 +3,14 @@
 module BitBucket
   class Repos::Hooks < API
 
-    REQUIRED_KEY_PARAM_NAMES = %w[ type ].freeze
+    REQUIRED_KEY_PARAM_NAMES = %w[ description url active events ].freeze
 
     # List hooks
     #
     # = Examples
     #  bitbucket = BitBucket.new
     #  bitbucket.repos.hooks.list 'user-name', 'repo-name'
-    #  bitbucket.repos.hooks.list 'user-name', 'repo-name' { |service| ... }
+    #  bitbucket.repos.hooks.list 'user-name', 'repo-name' { |hook| ... }
     #
     def list(user_name, repo_name, params={})
       _update_user_repo_params(user_name, repo_name)
@@ -23,7 +23,7 @@ module BitBucket
     end
     alias :all :list
 
-    # Gets a single service
+    # Gets a single hook
     #
     # = Examples
     #  @bitbucket = BitBucket.new
@@ -39,7 +39,7 @@ module BitBucket
     end
     alias :find :get
 
-    # Create a service
+    # Create a hook
     #
     # = Inputs
     # * <tt>:type</tt> - One of the supported hooks. The type is a case-insensitive value.
@@ -61,7 +61,7 @@ module BitBucket
       post_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks", params)
     end
 
-    # Edit a service
+    # Edit a hook
     #
     # = Inputs
     # * <tt>:type</tt> - One of the supported hooks. The type is a case-insensitive value.
@@ -74,29 +74,29 @@ module BitBucket
     #    "Username"       => "...",
     #    "Discussion URL" => "..."
     #
-    def edit(user_name, repo_name, service_id, params={})
+    def edit(user_name, repo_name, hook_id, params={})
       _update_user_repo_params(user_name, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
-      _validate_presence_of(service_id)
+      _validate_presence_of(hook_id)
 
       normalize! params
 
-      put_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{service_id}", params)
+      put_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params)
     end
 
-    # Delete service
+    # Delete hook
     #
     # = Examples
     #  @bitbucket = BitBucket.new
     #  @bitbucket.repos.hooks.delete 'user-name', 'repo-name', 109172378
     #
-    def delete(user_name, repo_name, service_id, params={})
+    def delete(user_name, repo_name, hook_id, params={})
       _update_user_repo_params(user_name, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
-      _validate_presence_of(service_id)
+      _validate_presence_of(hook_id)
       normalize! params
 
-      delete_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{service_id}", params)
+      delete_request("/2.0/repositories/#{user}/#{repo.downcase}/hooks/#{hook_id}", params)
     end
 
   end # Repos::Keys
