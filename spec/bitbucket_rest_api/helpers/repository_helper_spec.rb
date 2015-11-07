@@ -6,24 +6,24 @@ describe "RepositoryHelper" do
     include BitBucket::Helpers::RepositoryHelper
 
     it "filters special characters" do
-      sanitize_repository_name("Funnü ChAraxt%").should == "funn-charaxt"
+      expect(sanitize_repository_name("Funnü ChAraxt%")).to eq("funn-charaxt")
     end
 
     it "filters special characters" do
-      sanitize_repository_name(nil).should == nil
+      expect(sanitize_repository_name(nil)).to eq(nil)
     end
 
     it "replaces slashes by dashes" do
-      sanitize_repository_name("my/repo").should == "my-repo"
+      expect(sanitize_repository_name("my/repo")).to eq("my-repo")
     end
 
     it "doesn't put more than one dash in a row" do
-      sanitize_repository_name("my - repo").should == "my-repo"
+      expect(sanitize_repository_name("my - repo")).to eq("my-repo")
     end
 
-    ["bit.bucket", "bitbucket", "bit-bucket", "bit_bucket"].each do |repo_name|
-      it "does not change a valid repo name (#{repo_name})" do
-        sanitize_repository_name(repo_name).should == repo_name
+    it "does not change a valid repo name" do
+      ["bit.bucket", "bitbucket", "bit-bucket", "bit_bucket"].each do |repo_name|
+        expect(sanitize_repository_name(repo_name)).to eq(repo_name)
       end
     end
   end

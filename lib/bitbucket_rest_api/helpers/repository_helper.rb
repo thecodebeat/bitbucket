@@ -1,7 +1,6 @@
 module BitBucket
   module Helpers
     module RepositoryHelper
-
       def sanitize_repository_name(repository_name)
         return nil if repository_name.nil?
         repository_name.downcase
@@ -9,7 +8,6 @@ module BitBucket
           .gsub(/[ \/]/, '-')             # convert characters to dashes
           .gsub(/-+/, '-')                # only allow one dash in a row
       end
-
     end
   end
 end
