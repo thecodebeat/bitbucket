@@ -87,7 +87,7 @@ The `bitbucket_rest_api` gem will use the default middleware stack which is expo
 
 ```ruby
 bitbucket = BitBucket.new do |config|
-  config.stack.insert_after BitBucket::Response::Helpers, CustomMiddleware
+  config.stack.insert_after CustomMiddleware
 end
 ```
 
@@ -98,7 +98,6 @@ bitbucket = BitBucket.new do |config|
   config.adapter :excon
 
   config.stack do |builder|
-    builder.use BitBucket::Response::Helpers
     builder.use BitBucket::Response::Jsonize
   end
 end
