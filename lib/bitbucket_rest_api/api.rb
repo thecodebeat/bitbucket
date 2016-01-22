@@ -40,7 +40,6 @@ module BitBucket
     def initialize(options={}, &block)
       super()
       setup options
-      set_api_client
 
       self.instance_eval(&block) if block_given?
     end
@@ -62,11 +61,6 @@ module BitBucket
         self.login    = auth[:login]
         self.password = auth[:password]
       end
-    end
-
-    # Assigns current api class
-    def set_api_client
-      BitBucket.api_client = self
     end
 
     # Responds to attribute query or attribute clear
