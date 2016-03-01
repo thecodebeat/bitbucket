@@ -15,7 +15,6 @@ module BitBucket
     def self.create_instance(klass, options)
       options.symbolize_keys!
       instance = convert_to_constant(klass.to_s).new options
-      BitBucket.api_client = instance
       instance
     end
 
