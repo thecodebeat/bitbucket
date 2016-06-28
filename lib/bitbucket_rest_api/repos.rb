@@ -11,6 +11,7 @@ module BitBucket
                  :Services    => 'services',
                  :Following   => 'following',
                  :Sources     => 'sources',
+                 :Statuses    => 'statuses',
                  :Forks       => 'forks',
                  :Commits     => 'commits',
                  :Download    => 'download',
@@ -67,6 +68,10 @@ module BitBucket
     # Access to Repos::Services API
     def services
       @services ||= ApiFactory.new 'Repos::Services'
+    end
+
+    def statuses
+      @statuses ||= ApiFactory.new 'Repos::Statuses'
     end
 
     def forks
