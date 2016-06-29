@@ -1,39 +1,72 @@
-# encoding: UTF-8
-require 'bitbucket_rest_api'
+require 'spec_helper'
 
 describe BitBucket::Repos::Keys do
-  context "creating a key" do
-    let(:keys) { BitBucket::Repos::Keys.new }
-
-    it "should work for a repository with special characters" do
-      repository_name = "Funnü ChAraxt%"
-      repository_url_name = "funn-charaxt"
-      expect(keys).to receive(:post_request).with("/1.0/repositories/user/#{repository_url_name}/deploy-keys/", anything)
-      keys.create "user", repository_name, label: '', key: ''
+  let(:deploy_keys) { described_class.new }
+  describe '.list' do
+    before do
+      expect(deploy_keys).to receive(:request).with(
+        :get,
+        '/1.0/repositories/mock_username/mock_repo/deploy-keys/',
+        {},
+        {}
+      ).and_return(['key1', 'key2', 'key3'])
     end
 
-    it "should preserve dashes in the repository name" do
-      repository_name = "my-repo"
-      expect(keys).to receive(:post_request).with("/1.0/repositories/user/#{repository_name}/deploy-keys/", anything)
-      keys.create "user", repository_name, label: '', key: ''
+    context 'without a block' do
+      it 'should make a GET request for the deploy keys belonging to the given repo' do
+        deploy_keys.list('mock_username', 'mock_repo')
+      end
     end
 
-    it "should preserve dots in the repository name" do
-      repository_name = "my.repo"
-      expect(keys).to receive(:post_request).with("/1.0/repositories/user/#{repository_name}/deploy-keys/", anything)
-      keys.create "user", repository_name, label: '', key: ''
+    context 'with a block' do
+      it 'should make a GET request for the deploy keys belonging to the given repo' do
+        deploy_keys.list('mock_username', 'mock_repo') { |key| key }
+      end
+    end
+  end
+
+  describe '.create' do
+    before do
+      expect(deploy_keys).to receive(:request).with(
+        :post,
+        '/1.0/repositories/mock_username/mock_repo/deploy-keys/',
+        { 'key' => 'mock_ssh_key', 'label' => 'mock_label' },
+        {}
+      )
     end
 
-    it "should preserve numbers in the repository name" do
-      repository_name = "myrepo33"
-      expect(keys).to receive(:post_request).with("/1.0/repositories/user/#{repository_name}/deploy-keys/", anything)
-      keys.create "user", repository_name, label: '', key: ''
+    it 'should make a POST request for the deploy keys belonging to the given repo' do
+      deploy_keys.create('mock_username', 'mock_repo', { key: 'mock_ssh_key', label: 'mock_label' })
+    end
+  end
+
+  describe '.edit' do
+    before do
+      expect(deploy_keys).to receive(:request).with(
+         :put,
+         '/1.0/repositories/mock_username/mock_repo/deploy-keys/1',
+         { 'key' => 'mock_ssh_key', 'label' => 'mock_label' },
+         {}
+       )
     end
 
-    it "should preserve underscores in the repository name" do
-      repository_name = "my_repo"
-      expect(keys).to receive(:post_request).with("/1.0/repositories/user/#{repository_name}/deploy-keys/", anything)
-      keys.create "user", repository_name, label: '', key: ''
+    it 'should make a PUT request for the deploy keys belonging to the given repo' do
+      deploy_keys.edit('mock_username', 'mock_repo', 1, { key: 'mock_ssh_key', label: 'mock_label' })
+    end
+  end
+
+  describe '.delete' do
+    before do
+      expect(deploy_keys).to receive(:request).with(
+        :delete,
+        '/1.0/repositories/mock_username/mock_repo/deploy-keys/mock_id',
+        { 'key' => 'mock_ssh_key', 'label' => 'mock_label' },
+        {}
+      )
+    end
+
+    it 'should make a DELETE request for the deploy keys belonging to the given repo' do
+      deploy_keys.delete('mock_username', 'mock_repo', 'mock_id', { key: 'mock_ssh_key', label: 'mock_label' })
     end
   end
 end

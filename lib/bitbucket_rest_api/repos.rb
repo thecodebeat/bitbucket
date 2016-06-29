@@ -15,8 +15,9 @@ module BitBucket
                  :Forks       => 'forks',
                  :Commits     => 'commits',
                  :Download    => 'download',
+                 :Webhooks    => 'webhooks',
                  :PullRequest => 'pull_request',
-                 :Hooks       => 'hooks'
+                 :DefaultReviewers => 'default_reviewers'
 
     DEFAULT_REPO_OPTIONS = {
         "website"         => "",
@@ -95,6 +96,10 @@ module BitBucket
       @pull_request ||= ApiFactory.new 'Repos::PullRequest'
     end
 
+    def default_reviewers
+      @default_reviewers ||= ApiFactory.new 'Repos::DefaultReviewers'
+    end
+
     # List branches
     #
     # = Examples
@@ -105,7 +110,7 @@ module BitBucket
     #   repos = BitBucket::Repos.new
     #   repos.branches 'user-name', 'repo-name'
     #
-    def branches(user_name, repo_name, params={ })
+    def branches(user_name, repo_name, params={})
       _update_user_repo_params(user_name, repo_name)
       _validate_user_repo_params(user, repo) unless (user? && repo?)
       normalize! params
@@ -117,6 +122,7 @@ module BitBucket
 
     alias :list_branches :branches
 
+    # FIXME: 'POST a new repository' is a deprecated feature of the API
     # Create a new repository for the authenticated user.
     #
     # = Parameters
@@ -200,6 +206,7 @@ module BitBucket
 
     alias :find :get
 
+    # FIXME: 'DELETE an existing repository' is a deprecated feature of the API
     # Delete a repository
     #
     # = Examples
