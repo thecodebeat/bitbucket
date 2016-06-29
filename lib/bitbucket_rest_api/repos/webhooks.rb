@@ -34,7 +34,7 @@ module BitBucket
         'events'
       )
 
-      post_request("/2.0/repositories/#{user_name}/#{repo_name}/hooks", params)
+      post_request("/2.0/repositories/#{user_name}/#{repo_name}/hooks", params, json: true)
     end
 
     def list(user_name, repo_name)
@@ -69,7 +69,8 @@ module BitBucket
 
       put_request(
         "/2.0/repositories/#{user_name}/#{repo_name}/hooks/#{hook_uuid}",
-        params
+        params,
+        json: true
       )
     end
 
