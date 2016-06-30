@@ -33,8 +33,8 @@ module BitBucket
         'active',
         'events'
       )
-
-      post_request("/2.0/repositories/#{user_name}/#{repo_name}/hooks", params, json: true)
+      options = { headers: { "Content-Type" => "application/json" } }
+      post_request("/2.0/repositories/#{user_name}/#{repo_name}/hooks", params, options)
     end
 
     def list(user_name, repo_name)
@@ -67,10 +67,11 @@ module BitBucket
         'events'
       )
 
+      options = { headers: { "Content-Type" => "application/json" } }
       put_request(
         "/2.0/repositories/#{user_name}/#{repo_name}/hooks/#{hook_uuid}",
         params,
-        json: true
+        options
       )
     end
 

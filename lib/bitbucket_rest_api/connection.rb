@@ -40,14 +40,10 @@ module BitBucket
       Proc.new do |builder|
         #builder.use BitBucket::Request::Jsonize
         builder.use Faraday::Request::Multipart
-        if options.delete(:json)
-          builder.use FaradayMiddleware::EncodeJson
-        else
-          builder.use Faraday::Request::UrlEncoded
-        end
+        builder.use Faraday::Request::UrlEncoded
 
-        if client_id? and client_secret?
-          builder.use FaradayMiddleware::OAuth, {:consumer_key => client_id, :consumer_secret => client_secret, :token => oauth_token, :token_secret => oauth_secret}
+        if client_id? && client_secret?
+          builder.use FaradayMiddleware::OAuth, {consumer_key: client_id, consumer_secret: client_secret, token: oauth_token, token_secret: oauth_secret}
         end
 
         builder.use BitBucket::Request::BasicAuth, authentication if basic_authed?
@@ -91,12 +87,11 @@ module BitBucket
     # Returns a Fraday::Connection object
     #
     def connection(options = {})
-      json = options.delete(:json)
       conn_options = default_options(options)
       clear_cache unless options.empty?
       puts "OPTIONS:#{conn_options.inspect}" if ENV['DEBUG']
 
-      @connection ||= Faraday.new(conn_options.merge(:builder => stack(options.merge(json: json)))) do |faraday|
+      @connection ||= Faraday.new(conn_options.merge(:builder => stack(options))) do |faraday|
         faraday.response :logger if ENV['DEBUG']
       end
     end
