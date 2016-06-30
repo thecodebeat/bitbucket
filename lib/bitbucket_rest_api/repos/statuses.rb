@@ -38,9 +38,10 @@ module BitBucket
         "url" => url
       })
 
+      faraday_options = { headers: { "Content-Type" => "application/json" } }
       post_request("/2.0/repositories/#{user}/#{sanitize_repository_name(repo)}/commit/#{sha}/statuses/build",
         build_options,
-        json: true)
+        faraday_options)
     end
   end # Repos::Statuses
 end # BitBucket

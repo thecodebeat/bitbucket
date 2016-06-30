@@ -24,7 +24,7 @@ describe BitBucket::Repos::Statuses do
           "key"=> key,
           "url"=> url
         },
-        {json: true})
+        {:headers=>{"Content-Type"=>"application/json"}})
 
       status_create
     end
