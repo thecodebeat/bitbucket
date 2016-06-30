@@ -42,7 +42,8 @@ module BitBucket
       filter! VALID_KEY_PARAM_NAMES, params
       assert_required_keys(VALID_KEY_PARAM_NAMES, params)
 
-      post_request("/1.0/repositories/#{user}/#{sanitize_repository_name(repo)}/deploy-keys/", params)
+      options = { headers: { "Content-Type" => "application/json" } }
+      post_request("/1.0/repositories/#{user}/#{sanitize_repository_name(repo)}/deploy-keys/", params, options)
     end
 
     # Edit a key
