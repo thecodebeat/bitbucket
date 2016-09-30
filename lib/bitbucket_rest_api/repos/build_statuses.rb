@@ -16,7 +16,7 @@ module BitBucket
       )
     end
 
-    class Status < Struct.new(:url, :description, :state)
+    class Status < Struct.new(:key, :url, :description, :state)
       def initialize(**kwargs)
         kwargs.each { |key, val| public_send(:"#{key}=", val) }
       end
