@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 module BitBucket
-  class Repos::BuildStatus < API
+  class Repos::BuildStatuses < API
     CREATE_OPTIONS = {
       headers: {
         'Content-Type' => 'application/json'
@@ -57,5 +57,5 @@ module BitBucket
         }
       end
     end # class Creator
-  end # class Repos::BuildStatus
+  end # class Repos::BuildStatuses
 end # module BitBucket
