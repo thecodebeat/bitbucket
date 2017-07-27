@@ -3,7 +3,7 @@
 module BitBucket
   class Repos::Commits < API
 
-    VALID_KEY_PARAM_NAMES = %w(include exclude).freeze
+    VALID_KEY_PARAM_NAMES = %w(include exclude pagelen).freeze
 
     # Gets the commit information associated with a repository. By default, this
     # call returns all the commits across all branches, bookmarks, and tags. The
