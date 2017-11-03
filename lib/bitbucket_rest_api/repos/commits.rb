@@ -28,9 +28,15 @@ module BitBucket
       normalize! params
       filter! VALID_KEY_PARAM_NAMES, params
 
-      path = "/2.0/repositories/#{user}/#{repo.downcase}/commits"
+      path = if ButBucket.options[:bitbucker_server]
+               "/1.0/projects/#{user_name}/repos/#{repos}/commits"
+             else
+               "/2.0/repositories/#{user}/#{repo.downcase}/commits"
+             end
+
       path << "/#{branchortag}" if branchortag
       response = get_request(path, params)
+
       return response unless block_given?
       response.each { |el| yield el }
     end
