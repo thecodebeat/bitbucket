@@ -202,7 +202,7 @@ module BitBucket
       normalize! params
 
       url = if BitBucket.options[:bitbucket_server]
-              "/1.0/users/#{user}/repos/#{repo.downcase}"
+              "/1.0/projects/#{user}/repos/#{repo.downcase}"
             else
               "/1.0/repositories/#{user}/#{repo.downcase}"
             end

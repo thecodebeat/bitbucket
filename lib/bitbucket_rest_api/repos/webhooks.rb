@@ -21,8 +21,8 @@ module BitBucket
       'repo:refs_changed'
     ]
 
-    def create(user_name, repo_name, params = {})
-      _update_user_repo_params(user_name, repo_name)
+    def create(user_name_or_project_key, repo_name, params = {})
+      _update_user_repo_params(user_name_or_project_key, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
       normalize! params
       assert_required_keys(%w[description url active events], params)
@@ -36,29 +36,29 @@ module BitBucket
       )
       options = { headers: { "Content-Type" => "application/json" } }
       url = if BitBucket.options[:bitbucket_server]
-              "/1.0/users/#{user_name}/repos/#{repo_name}/webhooks"
+              "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name}/webhooks"
             else
-              "/2.0/repositories/#{user_name}/#{repo_name}/hooks"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo_name}/hooks"
             end
 
       post_request(url, params, options)
     end
 
-    def list(user_name, repo_name)
-      _update_user_repo_params(user_name, repo_name)
+    def list(user_name_or_project_key, repo_name)
+      _update_user_repo_params(user_name_or_project_key, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
 
       url = if BitBucket.options[:bitbucket_server]
-              "/1.0/users/#{user_name}/repos/#{repo_name}/webhooks"
+              "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name}/webhooks"
             else
-              "/2.0/repositories/#{user_name}/#{repo_name}/hooks"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo_name}/hooks"
             end
 
       get_request(url)
     end
 
-    def get(user_name, repo_name, hook_uuid)
-      _update_user_repo_params(user_name, repo_name)
+    def get(user_name_or_project_key, repo_name, hook_uuid)
+      _update_user_repo_params(user_name_or_project_key, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
 
       get_request(
@@ -88,14 +88,14 @@ module BitBucket
       )
     end
 
-    def delete(user_name, repo_name, hook_uuid)
-      _update_user_repo_params(user_name, repo_name)
+    def delete(user_name_or_project_key, repo_name, hook_uuid)
+      _update_user_repo_params(user_name_or_project_key, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
 
       url = if BitBucket.options[:bitbucket_server]
-              "/1.0/users/#{user_name}/repos/#{repo_name}/webhooks/#{hook_uuid}"
+              "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name}/webhooks/#{hook_uuid}"
             else
-              "/2.0/repositories/#{user_name}/#{repo_name}/hooks/#{hook_uuid}"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo_name}/hooks/#{hook_uuid}"
             end
 
       delete_request(url)
