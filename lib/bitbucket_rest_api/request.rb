@@ -37,7 +37,8 @@ module BitBucket
       puts "EXECUTED: #{method} - #{path} with #{params} and #{options}" if ENV['DEBUG']
 
       conn = connection(options)
-      path = (conn.path_prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
+      path_prefix = (path.include?('/ssh') && BitBucket.options[:bitbucket_server]) ? '/rest/keys' : conn.path_prefix
+      path = (path_prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
 
       response = conn.send(method) do |request|
         request['Authorization'] = "Bearer #{new_access_token}" unless new_access_token.nil?
