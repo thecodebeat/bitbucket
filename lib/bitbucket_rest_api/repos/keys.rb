@@ -3,7 +3,7 @@
 module BitBucket
   class Repos::Keys < API
 
-    VALID_KEY_PARAM_NAMES = %w[ label key text].freeze
+    VALID_KEY_PARAM_NAMES = %w[ label key text ].freeze
 
     # List deploy keys
     #
@@ -47,7 +47,6 @@ module BitBucket
       _validate_user_repo_params(user, repo) unless user? && repo?
       normalize! params
       filter! VALID_KEY_PARAM_NAMES, params
-      assert_required_keys(VALID_KEY_PARAM_NAMES, params)
 
       options = { headers: { "Content-Type" => "application/json" } }
 
