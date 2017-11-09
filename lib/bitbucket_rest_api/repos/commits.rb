@@ -28,7 +28,7 @@ module BitBucket
       normalize! params
       filter! VALID_KEY_PARAM_NAMES, params
 
-      path = if ButBucket.options[:bitbucker_server]
+      path = if BitBucket.options[:bitbucket_server]
                "/1.0/projects/#{user_name}/repos/#{repos}/commits"
              else
                "/2.0/repositories/#{user}/#{repo.downcase}/commits"
