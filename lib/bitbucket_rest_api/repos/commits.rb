@@ -29,7 +29,7 @@ module BitBucket
       filter! VALID_KEY_PARAM_NAMES, params
 
       path = if BitBucket.options[:bitbucket_server]
-               "/1.0/projects/#{user_name}/repos/#{repos}/commits"
+               "/1.0/projects/#{user_name}/repos/#{repo_name}/commits"
              else
                "/2.0/repositories/#{user}/#{repo.downcase}/commits"
              end
