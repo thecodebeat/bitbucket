@@ -30,7 +30,8 @@ module BitBucket
           },
           :ssl => { :verify => false },
           :url => options.fetch(:endpoint) { BitBucket.endpoint }
-      }.merge(options)
+      }.merge(BitBucket.connection_options)
+      .merge(options)
     end
 
     # Default middleware stack that uses default adapter as specified at
