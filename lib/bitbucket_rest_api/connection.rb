@@ -9,6 +9,8 @@ require 'bitbucket_rest_api/response/raise_error'
 require 'bitbucket_rest_api/request/oauth'
 require 'bitbucket_rest_api/request/basic_auth'
 require 'bitbucket_rest_api/request/jsonize'
+require 'bitbucket_rest_api/request/oauth2'
+require 'oauth2'
 
 module BitBucket
   module Connection
@@ -44,13 +46,13 @@ module BitBucket
         builder.use Faraday::Request::UrlEncoded
 
         if client_id? && client_secret?
-          builder.use FaradayMiddleware::OAuth, {consumer_key: client_id, consumer_secret: client_secret, token: oauth_token, token_secret: oauth_secret}
+          builder.use BitBucket::FaradayMiddleware::OAuth2, oauth2_token
         end
 
         builder.use BitBucket::Request::BasicAuth, authentication if basic_authed?
-        builder.use FaradayMiddleware::EncodeJson
+        builder.use ::FaradayMiddleware::EncodeJson
 
-        builder.use Faraday::Response::Logger if ENV['DEBUG']
+        builder.use ::Faraday::Response::Logger if ENV['DEBUG']
         unless options[:raw]
           builder.use BitBucket::Response::Mashify
           builder.use BitBucket::Response::Jsonize
@@ -89,7 +91,7 @@ module BitBucket
     #
     def connection(options = {})
       conn_options = default_options(options)
-      clear_cache unless options.empty?
+      clear_cache unless options.empty? || oauth2_token
       puts "OPTIONS:#{conn_options.inspect}" if ENV['DEBUG']
 
       @connection ||= Faraday.new(conn_options.merge(:builder => stack(options))) do |faraday|
@@ -97,5 +99,18 @@ module BitBucket
       end
     end
 
+      private
+
+      def oauth2_token
+        oauth2_client = ::OAuth2::Client.new(
+          client_id,
+          client_secret,
+          site: 'https://bitbucket.org/site',
+          authorize_url: '/site/oauth/authorize',
+          token_url: '/site/oauth2/access_token'
+        )
+
+        oauth2_client.client_credentials.get_token
+      end
   end # Connection
 end # BitBucket
