@@ -40,7 +40,7 @@ module BitBucket
         oauth2_client ||= ::OAuth2::Client.new(
           options[:client_id],
           options[:client_secret],
-          site: 'https://bitbucket.org/site',
+          site: 'https://bitbucket.org',
           authorize_url: '/site/oauth/authorize',
           token_url: '/site/oauth2/access_token',
           connection_opts: options[:connection_options]
