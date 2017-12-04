@@ -1,6 +1,7 @@
 require 'base64'
 require 'faraday'
 require 'forwardable'
+require 'oauth2'
 
 module BitBucket
   module FaradayMiddleware
@@ -37,7 +38,7 @@ module BitBucket
       end
 
       def oauth2_client
-        oauth2_client ||= ::OAuth2::Client.new(
+        @oauth2_client ||= ::OAuth2::Client.new(
           options[:client_id],
           options[:client_secret],
           site: 'https://bitbucket.org',
