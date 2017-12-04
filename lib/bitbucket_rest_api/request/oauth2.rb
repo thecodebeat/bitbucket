@@ -7,25 +7,44 @@ module BitBucket
     class OAuth2 < Faraday::Middleware
       AUTH_HEADER = 'Authorization'.freeze
 
-      attr_reader :oauth2_token
+      attr_reader :options
 
       extend Forwardable
 
       def call(env)
-        if @oauth2_token.expired?
-          @oauth2_token = @oauth2_token.refresh!({ headers: { 'Authorization' => 'Basic ' + get_api_key() } })
-        end
+        reset_oauth2_token! if oauth2_token.expired?
 
-        unless @oauth2_token.token.to_s.empty?
-          env[:request_headers][AUTH_HEADER] = %(Bearer #{@oauth2_token.token})
+        unless oauth2_token.token.to_s.empty?
+          env[:request_headers][AUTH_HEADER] = %(Bearer #{oauth2_token.token})
         end
 
         @app.call env
       end
 
-      def initialize(app = nil, token = nil)
+      def initialize(app, options={})
         super app
-        @oauth2_token = token
+        @options = options
+      end
+
+      private
+
+      def reset_oauth2_token!
+        @token = nil
+      end
+
+      def oauth2_token
+        @token ||= oauth2_client.client_credentials.get_token
+      end
+
+      def oauth2_client
+        oauth2_client ||= ::OAuth2::Client.new(
+          options[:client_id],
+          options[:client_secret],
+          site: 'https://bitbucket.org/site',
+          authorize_url: '/site/oauth/authorize',
+          token_url: '/site/oauth2/access_token',
+          connection_opts: options[:connection_options]
+        )
       end
 
     end

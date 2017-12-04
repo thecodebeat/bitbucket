@@ -46,7 +46,7 @@ module BitBucket
         builder.use Faraday::Request::UrlEncoded
 
         if client_id? && client_secret?
-          builder.use BitBucket::FaradayMiddleware::OAuth2, oauth2_token
+          builder.use BitBucket::FaradayMiddleware::OAuth2, {client_id: client_id, client_secret: client_secret, connection_options: BitBucket.connection_options}
         end
 
         builder.use BitBucket::Request::BasicAuth, authentication if basic_authed?
@@ -91,7 +91,7 @@ module BitBucket
     #
     def connection(options = {})
       conn_options = default_options(options)
-      clear_cache unless options.empty? || oauth2_token
+      clear_cache unless options.empty?
       puts "OPTIONS:#{conn_options.inspect}" if ENV['DEBUG']
 
       @connection ||= Faraday.new(conn_options.merge(:builder => stack(options))) do |faraday|
@@ -99,18 +99,5 @@ module BitBucket
       end
     end
 
-      private
-
-      def oauth2_token
-        oauth2_client = ::OAuth2::Client.new(
-          client_id,
-          client_secret,
-          site: 'https://bitbucket.org/site',
-          authorize_url: '/site/oauth/authorize',
-          token_url: '/site/oauth2/access_token'
-        )
-
-        oauth2_client.client_credentials.get_token
-      end
   end # Connection
 end # BitBucket
