@@ -62,7 +62,7 @@ module BitBucket
       _validate_user_repo_params(user, repo) unless user? && repo?
 
       get_request(
-        "/2.0/repositories/#{user_name}/#{repo_name}/hooks/#{hook_uuid}"
+        "/2.0/repositories/#{user_name_or_project_key}/#{repo_name}/hooks/#{hook_uuid}"
       )
     end
 
