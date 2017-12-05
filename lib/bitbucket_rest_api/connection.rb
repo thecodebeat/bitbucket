@@ -6,9 +6,10 @@ require 'bitbucket_rest_api/response'
 require 'bitbucket_rest_api/response/mashify'
 require 'bitbucket_rest_api/response/jsonize'
 require 'bitbucket_rest_api/response/raise_error'
-require 'bitbucket_rest_api/request/oauth'
 require 'bitbucket_rest_api/request/basic_auth'
 require 'bitbucket_rest_api/request/jsonize'
+require 'bitbucket_rest_api/request/oauth2'
+require 'oauth2'
 
 module BitBucket
   module Connection
@@ -44,13 +45,13 @@ module BitBucket
         builder.use Faraday::Request::UrlEncoded
 
         if client_id? && client_secret?
-          builder.use FaradayMiddleware::OAuth, {consumer_key: client_id, consumer_secret: client_secret, token: oauth_token, token_secret: oauth_secret}
+          builder.use BitBucket::FaradayMiddleware::OAuth2, {client_id: client_id, client_secret: client_secret, connection_options: BitBucket.connection_options}
         end
 
         builder.use BitBucket::Request::BasicAuth, authentication if basic_authed?
-        builder.use FaradayMiddleware::EncodeJson
+        builder.use ::FaradayMiddleware::EncodeJson
 
-        builder.use Faraday::Response::Logger if ENV['DEBUG']
+        builder.use ::Faraday::Response::Logger if ENV['DEBUG']
         unless options[:raw]
           builder.use BitBucket::Response::Mashify
           builder.use BitBucket::Response::Jsonize
