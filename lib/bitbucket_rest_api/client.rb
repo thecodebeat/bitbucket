@@ -14,6 +14,12 @@ module BitBucket
       @issues ||= ApiFactory.new 'Issues', options
     end
 
+    # An API for users to manage their own tokens.
+    def oauth(options = {})
+      @oauth ||= ApiFactory.new 'Request::OAuth', options
+    end
+    alias :authorizations :oauth
+
     def teams(options = {})
       raise "Unimplemented"
       #@teams ||= ApiFactory.new 'teams', options
