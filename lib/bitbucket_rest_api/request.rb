@@ -30,19 +30,16 @@ module BitBucket
 
     def retry_token_refresh_errors
       count = 0
-      response = nil
       begin
-        response = yield
+        yield
       rescue BitBucket::Error::RefreshToken
         count += 1
         if count < 3
-          puts "RETRYING"
           sleep 0.3 * count
           retry
         end
         raise
       end
-      response
     end
 
     def request(method, path, params, options={})
