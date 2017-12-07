@@ -28,6 +28,23 @@ module BitBucket
       request(:delete, path, params, options)
     end
 
+    def retry_token_refresh_errors
+      count = 0
+      response = nil
+      begin
+        response = yield
+      rescue BitBucket::Error::RefreshToken
+        count += 1
+        if count < 3
+          puts "RETRYING"
+          sleep 0.3 * count
+          retry
+        end
+        raise
+      end
+      response
+    end
+
     def request(method, path, params, options={})
       if !METHODS.include?(method)
         raise ArgumentError, "unkown http method: #{method}"
@@ -36,25 +53,28 @@ module BitBucket
 
       puts "EXECUTED: #{method} - #{path} with #{params} and #{options}" if ENV['DEBUG']
 
-      conn = connection(options)
-      path_prefix = (path.include?('/ssh') && BitBucket.options[:bitbucket_server]) ? '/rest/keys' : conn.path_prefix
-      path = (path_prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
+      response = retry_token_refresh_errors do
+        conn = connection(options)
+        path_prefix = (path.include?('/ssh') && BitBucket.options[:bitbucket_server]) ? '/rest/keys' : conn.path_prefix
+        path = (path_prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
 
-      response = conn.send(method) do |request|
-        request['Authorization'] = "Bearer #{new_access_token}" unless new_access_token.nil?
-        case method.to_sym
-        when *(METHODS - METHODS_WITH_BODIES)
-          request.body = params.delete('data') if params.has_key?('data')
-          request.url(path, params)
-        when *METHODS_WITH_BODIES
-          request.path = path
-          unless params.empty?
-            # data = extract_data_from_params(params)
-            # request.body = MultiJson.dump(data)
-            request.body = MultiJson.dump(params)
+        response = conn.send(method) do |request|
+          request['Authorization'] = "Bearer #{new_access_token}" unless new_access_token.nil?
+          case method.to_sym
+          when *(METHODS - METHODS_WITH_BODIES)
+            request.body = params.delete('data') if params.has_key?('data')
+            request.url(path, params)
+          when *METHODS_WITH_BODIES
+            request.path = path
+            unless params.empty?
+              # data = extract_data_from_params(params)
+              # request.body = MultiJson.dump(data)
+              request.body = MultiJson.dump(params)
+            end
           end
         end
       end
+
       response.body
     end
 
