@@ -3,6 +3,8 @@
 require 'faraday'
 require 'bitbucket_rest_api/error'
 
+REFRESH_TOKEN = %r{Access token expired. Use your refresh token to obtain a new access token.}
+
 module BitBucket
   class Response::RaiseError < Faraday::Response::Middleware
 
@@ -11,6 +13,9 @@ module BitBucket
       when 400
         raise BitBucket::Error::BadRequest.new(env)
       when 401
+        if env[:body] =~ REFRESH_TOKEN
+          raise BitBucket::Error::RefreshToken.new(env)
+        end
         raise BitBucket::Error::Unauthorized.new(env)
       when 403
         raise BitBucket::Error::Forbidden.new(env)
