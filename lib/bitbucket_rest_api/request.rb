@@ -34,7 +34,7 @@ module BitBucket
         yield
       rescue BitBucket::Error::RefreshToken
         count += 1
-        if count < 3
+        if count <= 3
           sleep 0.3 * count
           retry
         end
