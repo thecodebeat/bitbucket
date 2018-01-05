@@ -52,8 +52,8 @@ module BitBucket
 
       response = retry_token_refresh_errors do
         conn = connection(options)
-        path_prefix = (path.include?('/ssh') && BitBucket.options[:bitbucket_server]) ? '/rest/keys' : conn.path_prefix
-        path = (path_prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
+        prefix = path_prefix(path, conn)
+        path = (prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
 
         response = conn.send(method) do |request|
           request['Authorization'] = "Bearer #{new_access_token}" unless new_access_token.nil?
@@ -76,6 +76,16 @@ module BitBucket
     end
 
     private
+
+    def path_prefix(path, conn)
+      if path.include?('/ssh') && BitBucket.options[:bitbucket_server]
+        '/rest/keys'
+      elsif path.include('/build-status') && BitBucket.options[:bitbucket_server]
+        '/rest/build-status'
+      else
+        conn.path_prefix
+      end
+    end
 
     # def extract_data_from_params(params) # :nodoc:
     #   if params.has_key?('data') and !params['data'].nil?
