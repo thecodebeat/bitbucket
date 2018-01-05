@@ -80,8 +80,8 @@ module BitBucket
     def path_prefix(path, conn)
       if path.include?('/ssh') && BitBucket.options[:bitbucket_server]
         '/rest/keys'
-      elsif path.include('/build-status') && BitBucket.options[:bitbucket_server]
-        '/rest/build-status'
+      elsif path.include?('/build-status') && BitBucket.options[:bitbucket_server]
+        ''
       else
         conn.path_prefix
       end

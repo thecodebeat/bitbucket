@@ -45,7 +45,7 @@ module BitBucket
             end
 
       faraday_options = { headers: { "Content-Type" => "application/json" } }
-      post_request(url)
+      post_request(url, build_options, faraday_options)
     end
   end # Repos::Statuses
 end # BitBucket
