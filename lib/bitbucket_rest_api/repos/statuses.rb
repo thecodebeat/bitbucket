@@ -38,10 +38,14 @@ module BitBucket
         "url" => url
       })
 
+      url = if BitBucket.options[:bitbucket_server]
+              "/rest/build-status/1.0/commits/#{sha}"
+            else
+              "/2.0/repositories/#{user}/#{sanitize_repository_name(repo)}/commit/#{sha}/statuses/build"
+            end
+
       faraday_options = { headers: { "Content-Type" => "application/json" } }
-      post_request("/2.0/repositories/#{user}/#{sanitize_repository_name(repo)}/commit/#{sha}/statuses/build",
-        build_options,
-        faraday_options)
+      post_request(url, build_options, faraday_options)
     end
   end # Repos::Statuses
 end # BitBucket
