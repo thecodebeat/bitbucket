@@ -127,7 +127,7 @@ describe BitBucket::Repos::Webhooks, wip: true do
     it 'makes a GET request for all the webhooks beloning to the given repo' do
       expect(subject).to receive(:request).with(
         :get,
-        '/2.0/repositories/mock_username/mock_repo/hooks',
+        '/2.0/repositories/mock_username/mock_repo/hooks?pagelen=100',
         {},
         {}
       )

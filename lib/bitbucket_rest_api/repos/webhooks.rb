@@ -51,7 +51,7 @@ module BitBucket
       url = if BitBucket.options[:bitbucket_server]
               "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name}/webhooks"
             else
-              "/2.0/repositories/#{user_name_or_project_key}/#{repo_name}/hooks"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo_name}/hooks?pagelen=100"
             end
 
       get_request(url)
