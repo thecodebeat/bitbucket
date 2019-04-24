@@ -18,9 +18,12 @@ module BitBucket
       normalize! params
 
       url = if BitBucket.options[:bitbucket_server]
+              # Endpoint is not referenced in the docs
+              # https://docs.atlassian.com/bitbucket-server/rest/6.0.0/bitbucket-rest.html
+              # but has been tested
               "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name.downcase}/ssh"
             else
-              "/1.0/repositories/#{user_name_or_project_key}/#{repo.downcase}/deploy-keys/"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo.downcase}/deploy-keys"
             end
 
       response = get_request(url, params)
@@ -51,9 +54,12 @@ module BitBucket
       options = { headers: { "Content-Type" => "application/json" } }
 
       url = if BitBucket.options[:bitbucket_server]
+              # Endpoint is not referenced in the docs
+              # https://docs.atlassian.com/bitbucket-server/rest/6.0.0/bitbucket-rest.html
+              # but has been tested
               "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name.downcase}/ssh"
             else
-              "/1.0/repositories/#{user_name_or_project_key}/#{repo.downcase}/deploy-keys/"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo.downcase}/deploy-keys"
             end
 
       post_request(url, params, options)
@@ -95,9 +101,12 @@ module BitBucket
       normalize! params
 
       url = if BitBucket.options[:bitbucket_server]
+              # Endpoint is not referenced in the docs
+              # https://docs.atlassian.com/bitbucket-server/rest/6.0.0/bitbucket-rest.html
+              # but has been tested
               "/1.0/projects/#{user_name_or_project_key}/repos/#{repo_name.downcase}/ssh/#{key_id}"
             else
-              "/1.0/repositories/#{user_name_or_project_key}/#{repo.downcase}/deploy-keys/#{key_id}"
+              "/2.0/repositories/#{user_name_or_project_key}/#{repo.downcase}/deploy-keys/#{key_id}"
             end
 
       delete_request(url, params)
