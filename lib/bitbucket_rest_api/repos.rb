@@ -6,17 +6,16 @@ module BitBucket
 
     # Load all the modules after initializing Repos to avoid superclass mismatch
     autoload_all 'bitbucket_rest_api/repos',
-                 :BuildStatuses    => 'build_statuses',
-                 :Changesets       => 'changesets',
-                 :Keys             => 'keys',
-                 :Services         => 'services',
-                 :Following        => 'following',
-                 :Sources          => 'sources',
-                 :Forks            => 'forks',
-                 :Commits          => 'commits',
-                 :Download         => 'download',
-                 :Webhooks         => 'webhooks',
-                 :PullRequest      => 'pull_request',
+                 :Changesets  => 'changesets',
+                 :Keys        => 'keys',
+                 :Services    => 'services',
+                 :Following   => 'following',
+                 :Sources     => 'sources',
+                 :Forks       => 'forks',
+                 :Commits     => 'commits',
+                 :Download    => 'download',
+                 :Webhooks    => 'webhooks',
+                 :PullRequest => 'pull_request',
                  :DefaultReviewers => 'default_reviewers'
 
     DEFAULT_REPO_OPTIONS = {
@@ -42,49 +41,42 @@ module BitBucket
     ].freeze
 
     # Creates new Repositories API
-    def initialize(options = {})
+    def initialize(options = { })
       super(options)
-    end
-
-    def build_statuses
-      @build_statuses ||= ApiFactory.new('Repos::BuildStatuses')
     end
 
     # Access to Repos::Commits API
     def changesets
-      @changesets ||= ApiFactory.new('Repos::Changesets')
+      @changesets ||= ApiFactory.new 'Repos::Changesets'
     end
 
     # Access to Repos::Keys API
     def keys
-      @keys ||= ApiFactory.new('Repos::Keys')
+      @keys ||= ApiFactory.new 'Repos::Keys'
     end
 
     # Access to Repos::Watchin API
     def following
-      @following ||= ApiFactory.new('Repos::Following')
+      @following ||= ApiFactory.new 'Repos::Following'
     end
 
     # Access to Repos::Commits API
     def sources
-      @sources ||= ApiFactory.new('Repos::Sources')
+      @sources ||= ApiFactory.new 'Repos::Sources'
     end
 
     # Access to Repos::Services API
     def services
-      @services ||= ApiFactory.new('Repos::Services')
+      @services ||= ApiFactory.new 'Repos::Services'
     end
-
     def forks
-      @forks ||= ApiFactory.new('Repos::Forks')
+      @forks ||= ApiFactory.new 'Repos::Forks'
     end
-
     def commits
-      @commits ||= ApiFactory.new 'Repos::Commits'
+      @commits ||=ApiFactory.new 'Repos::Commits'
     end
-
     def download
-      @download ||= ApiFactory.new "Repos::Download"
+      @download ||=ApiFactory.new "Repos::Download"
     end
 
     # Access to Repos::PullRequests API
@@ -94,11 +86,6 @@ module BitBucket
 
     def default_reviewers
       @default_reviewers ||= ApiFactory.new 'Repos::DefaultReviewers'
-    end
-
-    # Access to Repos::Webhooks API
-    def webhooks
-      @webhooks ||= ApiFactory.new 'Repos::Webhooks'
     end
 
     # List branches
@@ -111,9 +98,9 @@ module BitBucket
     #   repos = BitBucket::Repos.new
     #   repos.branches 'user-name', 'repo-name'
     #
-    def branches(user_name, repo_name, params = {})
+    def branches(user_name, repo_name, params={})
       _update_user_repo_params(user_name, repo_name)
-      _validate_user_repo_params(user, repo) unless user? && repo?
+      _validate_user_repo_params(user, repo) unless (user? && repo?)
       normalize! params
 
       response = get_request("/1.0/repositories/#{user}/#{repo.downcase}/branches/", params)
@@ -259,7 +246,7 @@ module BitBucket
     #   bitbucket.repos.tags 'user-name', 'repo-name'
     #   bitbucket.repos.tags 'user-name', 'repo-name' { |tag| ... }
     #
-    def tags(user_name, repo_name, params ={})
+    def tags(user_name, repo_name, params={ })
       _update_user_repo_params(user_name, repo_name)
       _validate_user_repo_params(user, repo) unless user? && repo?
       normalize! params

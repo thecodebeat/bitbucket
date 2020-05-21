@@ -41,9 +41,8 @@ module BitBucket
       normalize! params
       filter! VALID_KEY_PARAM_NAMES, params
       assert_required_keys(VALID_KEY_PARAM_NAMES, params)
-      
-      options = { headers: { "Content-Type" => "application/json" } }
-      post_request("/1.0/repositories/#{user}/#{repo.downcase}/deploy-keys/", params, options)
+
+      post_request("/1.0/repositories/#{user}/#{repo.downcase}/deploy-keys/", params)
     end
 
     # Edit a key
