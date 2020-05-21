@@ -118,7 +118,7 @@ module BitBucket
       url = if BitBucket.options[:bitbucket_server]
               "/1.0/projects/#{user}/repos/#{repo.downcase}/branches/"
             else
-              "/2.0/repositories/#{user}/#{repo.downcase}/branches/"
+              "/2.0/repositories/#{user}/#{repo.downcase}/refs/branches/"
             end
 
       response = get_request(url, params)
