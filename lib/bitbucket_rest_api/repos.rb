@@ -11,6 +11,7 @@ module BitBucket
                  :Services    => 'services',
                  :Following   => 'following',
                  :Sources     => 'sources',
+                 :Statuses    => 'statuses',
                  :Forks       => 'forks',
                  :Commits     => 'commits',
                  :Download    => 'download',
@@ -69,14 +70,25 @@ module BitBucket
     def services
       @services ||= ApiFactory.new 'Repos::Services'
     end
+
+    def statuses
+      @statuses ||= ApiFactory.new 'Repos::Statuses'
+    end
+
     def forks
       @forks ||= ApiFactory.new 'Repos::Forks'
     end
+
     def commits
       @commits ||=ApiFactory.new 'Repos::Commits'
     end
+
     def download
       @download ||=ApiFactory.new "Repos::Download"
+    end
+
+    def webhooks
+      @webhooks ||= ApiFactory.new 'Repos::Webhooks'
     end
 
     # Access to Repos::PullRequests API
@@ -189,7 +201,13 @@ module BitBucket
       _validate_user_repo_params(user, repo) unless user? && repo?
       normalize! params
 
-      get_request("/1.0/repositories/#{user}/#{repo.downcase}", params)
+      url = if BitBucket.options[:bitbucket_server]
+              "/1.0/projects/#{user}/repos/#{repo.downcase}"
+            else
+              "/2.0/repositories/#{user}/#{repo.downcase}"
+            end
+
+      get_request(url, params)
     end
 
     alias :find :get
@@ -227,12 +245,17 @@ module BitBucket
       _merge_user_into_params!(params) unless params.has_key?('user')
       filter! %w[ user type ], params
 
-      response = #if (user_name = params.delete("user"))
-                 #  get_request("/1.0/users/#{user_name}", params)
-                 #else
-                   # For authenticated user
-                   get_request("/1.0/user/repositories", params)
-                 #end
+      url = if BitBucket.options[:bitbucket_server]
+              if params.has_key?('user')
+                "/1.0/users/#{params['user']}/repos"
+              else
+                '/1.0/repos'
+              end
+            else
+              '/2.0/repositories'
+            end
+      response = get_request(url, params)
+
       return response unless block_given?
       response.each { |el| yield el }
     end

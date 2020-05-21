@@ -3,7 +3,7 @@
 module BitBucket
   class Repos::Commits < API
 
-    VALID_KEY_PARAM_NAMES = %w(include exclude).freeze
+    VALID_KEY_PARAM_NAMES = %w(include exclude pagelen).freeze
 
     # Gets the commit information associated with a repository. By default, this
     # call returns all the commits across all branches, bookmarks, and tags. The
@@ -28,9 +28,15 @@ module BitBucket
       normalize! params
       filter! VALID_KEY_PARAM_NAMES, params
 
-      path = "/2.0/repositories/#{user}/#{repo.downcase}/commits"
+      path = if BitBucket.options[:bitbucket_server]
+               "/1.0/projects/#{user_name}/repos/#{repo_name}/commits"
+             else
+               "/2.0/repositories/#{user}/#{repo.downcase}/commits"
+             end
+
       path << "/#{branchortag}" if branchortag
       response = get_request(path, params)
+
       return response unless block_given?
       response.each { |el| yield el }
     end
