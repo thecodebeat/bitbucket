@@ -33,6 +33,7 @@ end # BitBucket
   bad_events
   no_events
   blank_value
+  refresh_token
 ].each do |error|
   require "bitbucket_rest_api/error/#{error}"
 end

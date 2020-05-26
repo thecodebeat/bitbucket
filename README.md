@@ -4,6 +4,8 @@
 
 [Wiki](https://github.com/vongrippen/bitbucket/wiki) | [RDocs](http://rubydoc.info/github/vongrippen/bitbucket/master/frames)
 
+**Warning: not every endpoint in this project is maintained. Use at your own risk.**
+
 A Ruby wrapper for the BitBucket REST API.
 
 ## Installation
@@ -25,19 +27,19 @@ gem "bitbucket_rest_api"
 Create a new client instance
 
 ```ruby
-bitbucket = BitBucket.new
+bitbucket = BitBucket::Client.new
 ```
 
 At this stage you can also supply various configuration parameters, such as `:user`,`:repo`, `:oauth_token`, `:oauth_secret`, `:basic_auth` which are used throughout the API. These can be passed directly as hash options:
 
 ```ruby
-bitbucket = BitBucket.new oauth_token: 'request_token', oauth_secret: 'request_secret'
+bitbucket = BitBucket::Client.new oauth_token: 'request_token', oauth_secret: 'request_secret'
 ```
 
 Alternatively, you can configure the BitBucket settings by passing a block:
 
 ```ruby
-bitbucket = BitBucket.new do |config|
+bitbucket = BitBucket::Client.new do |config|
   config.oauth_token   = 'request_token'
   config.oauth_secret  = 'request_secret'
   config.client_id     = 'consumer_key'
@@ -49,16 +51,16 @@ end
 You can authenticate either using OAuth authentication or through basic authentication by passing your login and password credentials
 
 ```ruby
-bitbucket = BitBucket.new login:'vongrippen', password:'...'
+bitbucket = BitBucket::Client.new login:'vongrippen', password:'...'
 ```
 
 or use convenience method:
 
 ```ruby
-bitbucket = BitBucket.new basic_auth: 'login:password'
+bitbucket = BitBucket::Client.new basic_auth: 'login:password'
 ```
 
-You can interact with BitBucket interface, for example repositories, by issuing following calls that correspond directly to the BitBucket API hierarchy
+You can interact with BitBucket interface, for example repositories, by issuing the following calls that correspond directly to the BitBucket API hierarchy
 
 ```ruby
 bitbucket.repos.changesets.all  'user-name', 'repo-name'
@@ -84,19 +86,18 @@ end
 The `bitbucket_rest_api` gem will use the default middleware stack which is exposed by calling `stack` on client instance. However, this stack can be freely modified with methods such as `insert`, `insert_after`, `delete` and `swap`. For instance to add your `CustomMiddleware` do
 
 ```ruby
-bitbucket = BitBucket.new do |config|
-  config.stack.insert_after BitBucket::Response::Helpers, CustomMiddleware
+bitbucket = BitBucket::Client.new do |config|
+  config.stack.insert_after CustomMiddleware
 end
 ```
 
 Furthermore, you can build your entire custom stack and specify other connection options such as `adapter`
 
 ```ruby
-bitbucket = BitBucket.new do |config|
+bitbucket = BitBucket::Client.new do |config|
   config.adapter :excon
 
   config.stack do |builder|
-    builder.use BitBucket::Response::Helpers
     builder.use BitBucket::Response::Jsonize
   end
 end
@@ -155,8 +156,8 @@ end
 
 or
 
-BitBucket.new(:oauth_token => YOUR_OAUTH_REQUEST_TOKEN, :oauth_secret => YOUR_OAUTH_REQUEST_TOKEN_SECRET)
-BitBucket.new(:basic_auth => 'login:password')
+BitBucket::Client.new(:oauth_token => YOUR_OAUTH_REQUEST_TOKEN, :oauth_secret => YOUR_OAUTH_REQUEST_TOKEN_SECRET)
+BitBucket::Client.new(:basic_auth => 'login:password')
 ```
 
 ## Development

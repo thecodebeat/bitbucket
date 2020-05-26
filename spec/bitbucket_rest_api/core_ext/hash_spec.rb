@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Hash do
 
   before do
-    BitBucket.new
+    BitBucket::Client.new
     @hash = { :a => 1, :b => 2, :c => 'e'}
     @serialized = "a=1&b=2&c=e"
     @nested_hash = { 'a' => { 'b' => {'c' => 1 } } }
